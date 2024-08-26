@@ -1,4 +1,5 @@
 import * as React from "react";
+import WhereToVoteIcon from "@mui/icons-material/WhereToVote";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -19,18 +20,12 @@ import CurrentPosition from "./CurrentLocation";
 import { Navigate, useNavigate } from "react-router-dom";
 import { isAuthenticated, logout } from "../services/Auth";
 
-
-
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
 import MapComponent from "./MapComponent";
 import ActionForm from "./ActionForm";
 import EntryList from "./EntryList";
 import SideDrawerIcon from "./sideDrawerIcon";
-
-
-
-
 
 const drawerWidth = 240;
 
@@ -99,11 +94,6 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-
-
-
-
-
 export default function AppDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -115,14 +105,14 @@ export default function AppDrawer() {
   const [formVisible, setFormVisible] = useState(false);
 
   const [storedEntries, setStoredEntries] = useState([]);
-  const [currentLocation,setCurrentLocation]=useState(false);
-  
-  const handleCurrentLocation=()=>{
+  const [currentLocation, setCurrentLocation] = useState(false);
+
+  const handleCurrentLocation = () => {
     setCurrentLocation(true);
     setCurrentLocation(false);
-  }
+  };
 
-  console.log(currentLocation)
+  console.log(currentLocation);
 
   //Read the data from the local storage
   useEffect(() => {
@@ -182,8 +172,6 @@ export default function AppDrawer() {
   if (!isAuthenticated()) {
     return <Navigate to="/login" />;
   }
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -256,8 +244,6 @@ export default function AppDrawer() {
     setFormVisible(false); // Optionally close the form after submission
   };
 
-  
-
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -290,8 +276,14 @@ export default function AppDrawer() {
           >
             <MenuIcon />
           </IconButton>
+          <WhereToVoteIcon
+              fontSize="large"
+      
+              sx={{ cursor: "pointer" }}
+            />
+
           <Typography variant="h6" noWrap component="div">
-            Mr.Mappy
+             Mr.Mappy
           </Typography>
         </Toolbar>
       </AppBar>
@@ -328,7 +320,7 @@ export default function AppDrawer() {
             />
           </div>
         ) : (
-         <SideDrawerIcon/>
+          <SideDrawerIcon />
         )}
       </Drawer>
 
@@ -369,7 +361,7 @@ export default function AppDrawer() {
               sx={{
                 position: "absolute",
                 top: 35, // Adjust positioning as needed
-                left: 100, // Adjust positioning as needed
+                left: 20, // Adjust positioning as needed
                 zIndex: 1000, // Ensure the form is above the map
                 backgroundColor: "white", // Optional: background to make form stand out
                 padding: 2, // Add padding for better form layout
@@ -390,7 +382,7 @@ export default function AppDrawer() {
         </Box>
       </Box>
       <div onClick={handleCurrentLocation}>
-        <CurrentPosition  />
+        <CurrentPosition />
       </div>
       <FloatingActionButtonExtendedSize logoutUser={logoutUser} />
     </Box>
