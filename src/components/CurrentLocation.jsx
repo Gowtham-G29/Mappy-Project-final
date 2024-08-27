@@ -5,6 +5,9 @@ import Fab from "@mui/material/Fab";
 import NavigationIcon from "@mui/icons-material/Navigation";
 
 export default function CurrentPosition() {
+
+  
+
   return (
     <Box sx={{ "& > :not(style)": { m: 1 } }}>
       <Fab

@@ -105,15 +105,18 @@ export default function AppDrawer() {
   const [formVisible, setFormVisible] = useState(false);
 
   const [storedEntries, setStoredEntries] = useState([]);
-  const [currentLocation, setCurrentLocation] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(false); // need to check 
   const [markerVisible, setMarkerVisible] = useState(false);
-
-  const handleCurrentLocation = () => {
-    setCurrentLocation(true);
-    setCurrentLocation(false);
-  };
-
-  console.log(currentLocation);
+  const navigate = useNavigate();
+  // const [focusCurrentPosition, setFocusCurrentPosition] = useState(null);
+  
+  const [navigateButton,setNavigateButton]=useState(false);
+  
+console.log(navigateButton);
+  
+  // console.log(navigateCurrent)
+   
+  // console.log(currentLocation);
 
   //Read the data from the local storage
   useEffect(() => {
@@ -138,7 +141,6 @@ export default function AppDrawer() {
     setVisiting(visitingEntries);
   }, []);
 
-  console.log(storedEntries);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -147,7 +149,6 @@ export default function AppDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
-    setFormVisible(true);
   };
 
   const [action, setAction] = useState("");
@@ -161,11 +162,10 @@ export default function AppDrawer() {
   const handleMapClick = (coords) => {
     setFormVisible(true);
     setClickedCoords(coords); // Store the coordinates in state
+    handleDrawerClose(); //if the map is clicked the deawer is closed
   };
 
   //logout
-
-  const navigate = useNavigate();
 
   const logoutUser = () => {
     logout();
@@ -210,6 +210,7 @@ export default function AppDrawer() {
       case "Hangout":
         newEntry = {
           type: "Hangout",
+          place:formData.get("placeName"),
           spendingDuration: formData.get("spendingDuration"),
           memorableMoments: formData.get("memorableMoments"),
         };
@@ -237,7 +238,7 @@ export default function AppDrawer() {
 
     // Add new entry
     existingEntries.push(newEntry);
-    // console.log("New Entry:", newEntry);
+    console.log("New Entry:", newEntry);
 
     // Store updated array in localStorage
     localStorage.setItem("entries", JSON.stringify(existingEntries));
@@ -260,12 +261,10 @@ export default function AppDrawer() {
     setVisibleItems((prev) => prev + 5); // Load 5 more items each time
   };
 
-  const handleCancel=()=>{
+  const handleCancel = () => {
     setFormVisible(false);
-  }
+  };
 
-  
- 
   
   return (
     <Box sx={{ display: "flex" }} className="overflow-hidden">
@@ -326,9 +325,8 @@ export default function AppDrawer() {
               loadMoreItems={loadMoreItems} // Pass the function here
             />
           </div>
-
         ) : (
-          <SideDrawerIcon />
+          <SideDrawerIcon handleDrawerOpen={handleDrawerOpen} />
         )}
       </Drawer>
 
@@ -362,10 +360,14 @@ export default function AppDrawer() {
             storedMarker={storedEntries}
             navigateCurrentLocation={setCurrentLocation}
             markerVisible={markerVisible}
+            // onCurrentPositionFocus={setFocusCurrentPosition} // Pass the setter for focusing
+            navigateButton={navigateButton}
+            setNavigateButton={setNavigateButton}
+
           />
 
           {/* Floating form */}
-          {formVisible &&  (
+          {formVisible && (
             <Box
               sx={{
                 position: "absolute",
@@ -386,15 +388,16 @@ export default function AppDrawer() {
                 handleAction={handleAction}
                 handleFormSubmit={handleFormSubmit}
                 setMarkerVisible={setMarkerVisible}
-                 handleCancel={handleCancel}
+                handleCancel={handleCancel}
               />
             </Box>
           )}
         </Box>
       </Box>
-      <div onClick={handleCurrentLocation}>
+      <div onClick={()=>{setNavigateButton(true)}}>
         <CurrentPosition />
       </div>
+      
       {!formVisible && (
         <FloatingActionButtonExtendedSize logoutUser={logoutUser} />
       )}

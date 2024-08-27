@@ -33,6 +33,13 @@ const ActionForm = ({ action, handleSubmit, handleAction, handleCancel }) => {
           {action === "Hangout" && (
             <>
               <TextField
+                label="Hangout Spot"
+                name="placeName"
+                fullWidth
+                id="place-Name"
+                required
+              />
+              <TextField
                 label="Spending Duration in Hrs"
                 name="spendingDuration"
                 type="number"
@@ -41,14 +48,13 @@ const ActionForm = ({ action, handleSubmit, handleAction, handleCancel }) => {
                 id="spending-duration"
                 required
               />
+
               <TextField
-                label="Memorable Moments"
+                label="Memorable Moment"
                 name="memorableMoments"
                 inputProps={{ maxLength: 12 }}
                 id="memorable-moments"
-                multiline
-                rows={4}
-                placeholder="Describe memorable moments"
+                placeholder="Describe moments"
                 required
               />
             </>

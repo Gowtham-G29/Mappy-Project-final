@@ -20,7 +20,6 @@ function EntryList({
   // Calculate total items
   const totalItems =
     moneySpending.length + workout.length + hangout.length + visiting.length;
-
   return (
     <div className="flex flex-col px-20 py-full bg-gradient-to-l from-sky-500 to-indigo-500  overflow-auto h-full">
       <div>
@@ -63,6 +62,7 @@ function EntryList({
             component="h6"
           >
             Workout
+
           </Typography> */}
           {workout.slice(0, visibleItems).map((entry, index) => (
             <ListItem key={index}>
@@ -105,7 +105,9 @@ function EntryList({
                   <Typography className="font-bold text-center" variant="">
                     {entry.type}
                   </Typography>
-
+                  <Typography variant="subtitle2">
+                   Place 🕒: {entry.place}
+                  </Typography>
                   <Typography variant="subtitle2">
                     Duration 🕒: {entry.spendingDuration}
                   </Typography>

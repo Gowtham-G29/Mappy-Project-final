@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   MapContainer,
   TileLayer,
   Marker,
   Popup,
   useMapEvents,
+  useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -18,16 +19,27 @@ const customIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-//icon for current location
-// const customIcon2 = new L.Icon({
-//   iconUrl:"../assets/LocationMarker.png",
-//   iconSize: [25, 41],
-//   iconAnchor: [12, 41],
-// });
+// icon for current location
+const customIcon2 = new L.Icon({
+  iconUrl:"https://img.icons8.com/?size=100&id=13800&format=png&color=000000",
+  iconSize: [30, 50],
+  iconAnchor: [12, 41], // need to identify what is this
+});
 
-const MapComponent = ({ handleMapClick, storedMarker, markerVisible }) => {
+const MapComponent = ({
+  handleMapClick,
+  storedMarker,
+  markerVisible,
+  onCurrentPositionFocus,
+  navigateButton,
+  setNavigateButton
+}) => {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
+  // Reference to map instance
+  const mapRef = useRef();
+
+  console.log(`${navigateButton} 23`);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -53,22 +65,51 @@ const MapComponent = ({ handleMapClick, storedMarker, markerVisible }) => {
     }
   }, []);
 
-  const MapClickHandler = () => {
-    useMapEvents({
-      click(e) {
-        handleMapClick(e.latlng); // Send the coordinates back to AppDrawer
-        setMarkers((prevMarkers) => [
-          ...prevMarkers,
-          {
-            geocode: [e.latlng.lat, e.latlng.lng],
-            popUp: "Latest Activity",
-          },
-        ]);
-      },
-    });
 
-    return null;
-  };
+// Method to focus on current position
+  
+const focusCurrentPosition = useCallback(() => {
+  if (mapRef.current && currentPosition) {
+    mapRef.current.setView(currentPosition, 15); // Focus on current position
+  }
+}, [currentPosition]);
+
+useEffect(() => {
+  if (onCurrentPositionFocus) {
+    onCurrentPositionFocus(focusCurrentPosition);
+  }
+}, [onCurrentPositionFocus, focusCurrentPosition]);
+
+useEffect(() => {
+  if (navigateButton) {
+    focusCurrentPosition();
+    // Optionally reset the navigation button state after focusing
+    setNavigateButton(false); 
+  }
+}, [focusCurrentPosition, navigateButton, setNavigateButton]);
+
+const MapClickHandler = () => {
+  const map = useMap();
+  mapRef.current = map; // Store map instance in the ref
+  useMapEvents({
+    click(e) {
+      handleMapClick(e.latlng); // Send the coordinates back to the parent component
+     
+      setMarkers((prevMarkers) => [
+        ...prevMarkers,
+        {
+          geocode: [e.latlng.lat, e.latlng.lng],
+          popUp: "Latest Activity",
+        },
+      ]);
+    },
+  });
+
+  return null;
+};
+
+
+  console.log(currentPosition);
 
   if (!currentPosition) {
     return <div>Loading map...</div>;
@@ -85,11 +126,9 @@ const MapComponent = ({ handleMapClick, storedMarker, markerVisible }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        
-      
+
         {markers.map((marker, index) => (
-          <Marker key={index} position={[...currentPosition]} icon={customIcon}>
+          <Marker key={index} position={[...currentPosition]} icon={customIcon2}>
             <div>
               <Popup>{marker.popUp}</Popup>
             </div>
@@ -117,6 +156,7 @@ const MapComponent = ({ handleMapClick, storedMarker, markerVisible }) => {
             <Popup>{marker.type}</Popup>
           </Marker>
         ))}
+
         <MapClickHandler />
       </MapContainer>
     </div>
