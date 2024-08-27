@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { TextField, MenuItem } from '@mui/material';
+import { TextField, MenuItem, Button } from "@mui/material";
 
-const ActionForm = ({ action, handleSubmit, handleAction }) => {
+const ActionForm = ({ action, handleSubmit, handleAction, handleCancel }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="bg-slate-100 p-10 shadow-2xl">
@@ -16,24 +16,27 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
             helperText="Please select your action type"
             fullWidth
             required
+            maxLength={12}
           >
             {[
-              { value: 'Money spending', label: 'Money spending 💰' },
-              { value: 'Workout', label: 'Workout 🚴🏻' },
-              { value: 'Hangout', label: 'Hangout 🕓' },
-              { value: 'Visiting', label: 'Visiting 🏢' }
-            ].map(option => (
+              { value: "Money spending", label: "Money spending 💰" },
+              { value: "Workout", label: "Workout 🚴🏻" },
+              { value: "Hangout", label: "Hangout 🕓" },
+              { value: "Visiting", label: "Visiting 🏢" },
+            ].map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
             ))}
           </TextField>
 
-          {action === 'Hangout' && (
+          {action === "Hangout" && (
             <>
               <TextField
-                label="Spending Duration"
+                label="Spending Duration in Hrs"
                 name="spendingDuration"
+                type="number"
+                maxLength="5"
                 fullWidth
                 id="spending-duration"
                 required
@@ -41,6 +44,7 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
               <TextField
                 label="Memorable Moments"
                 name="memorableMoments"
+                inputProps={{ maxLength: 12 }}
                 id="memorable-moments"
                 multiline
                 rows={4}
@@ -50,11 +54,12 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
             </>
           )}
 
-          {action === 'Money spending' && (
+          {action === "Money spending" && (
             <>
               <TextField
                 label="Amount"
                 name="amount"
+                type="number"
                 fullWidth
                 id="amount"
                 required
@@ -62,6 +67,7 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
               <TextField
                 label="Invested For"
                 name="investedFor"
+                inputProps={{ maxLength: 12 }}
                 id="invested-for"
                 multiline
                 maxRows={4}
@@ -71,25 +77,28 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
             </>
           )}
 
-          {action === 'Workout' && (
+          {action === "Workout" && (
             <>
               <TextField
                 label="Workout Name"
                 name="workoutName"
+                inputProps={{ maxLength: 12 }}
                 fullWidth
                 id="workout-name"
                 required
               />
               <TextField
-                label="Workout Duration"
+                label="Workout Duration in Hrs"
                 name="workoutDuration"
+                type="number"
                 fullWidth
                 id="workout-duration"
                 required
               />
               <TextField
-                label="Calories Burned"
+                label="Calories Burned in cal"
                 name="caloriesBurned"
+                type="number"
                 fullWidth
                 id="calories-burned"
                 required
@@ -97,7 +106,7 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
             </>
           )}
 
-          {action === 'Visiting' && (
+          {action === "Visiting" && (
             <>
               <TextField
                 label="Place Name"
@@ -107,8 +116,9 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
                 required
               />
               <TextField
-                label="Spending Duration"
+                label="Spending Duration in Hrs"
                 name="spendingDuration"
+                type="number"
                 fullWidth
                 id="visiting-duration"
                 required
@@ -116,6 +126,7 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
               <TextField
                 label="Motive"
                 name="motive"
+                inputProps={{ maxLength: 12 }}
                 fullWidth
                 id="motive"
                 required
@@ -123,11 +134,20 @@ const ActionForm = ({ action, handleSubmit, handleAction }) => {
             </>
           )}
 
-          <input className='bg-indigo-600 p-3 w-full text-md text-white rounded-md' type='submit' value={'Submit'}/>
+          <Button
+            type="submit"
+            variant="contained"
+            color="error"
+            onClick={handleCancel}
+          >
+            Cancel
+          </Button>
 
-          {/* <Button className='' onClick={handleFormSubmit} type="submit" variant="contained" color="primary">
-            Submit
-          </Button> */}
+          <input
+            className="bg-indigo-600 p-3 w-full text-md text-white rounded-md"
+            type="submit"
+            value={"Submit"}
+          />
         </div>
       </div>
     </form>
