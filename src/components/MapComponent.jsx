@@ -25,11 +25,9 @@ const customIcon = new L.Icon({
 //   iconAnchor: [12, 41],
 // });
 
-const MapComponent = ({ handleMapClick,storedMarker }) => {
+const MapComponent = ({ handleMapClick, storedMarker, markerVisible }) => {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [markers, setMarkers] = useState([]);
-  
-
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -53,11 +51,7 @@ const MapComponent = ({ handleMapClick,storedMarker }) => {
     } else {
       alert("Geolocation is not supported by this browser.");
     }
-      
-
   }, []);
-
-
 
   const MapClickHandler = () => {
     useMapEvents({
@@ -80,9 +74,6 @@ const MapComponent = ({ handleMapClick,storedMarker }) => {
     return <div>Loading map...</div>;
   }
 
- 
-
-
   return (
     <div style={{ height: "100vh", width: "100%" }}>
       <MapContainer
@@ -94,25 +85,37 @@ const MapComponent = ({ handleMapClick,storedMarker }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-
-
+        
+        
+      
         {markers.map((marker, index) => (
-          <Marker key={index} position={marker.geocode} icon={customIcon}>
-             
-             <div>
-             <Popup>{marker.popUp}</Popup>
-             </div>
-           
+          <Marker key={index} position={[...currentPosition]} icon={customIcon}>
+            <div>
+              <Popup>{marker.popUp}</Popup>
+            </div>
           </Marker>
-         ))}
+        ))}
 
+        {/* submitted markers */}
 
-         {/* //previous stored markers */}
-         {storedMarker.map((marker, index) => (
-          <Marker key={index} position={[marker.lat,marker.lng]} icon={customIcon}>
+        {markerVisible &&
+          markers.map((marker, index) => (
+            <Marker key={index} position={marker.geocode} icon={customIcon}>
+              <div>
+                <Popup>{marker.popUp}</Popup>
+              </div>
+            </Marker>
+          ))}
+
+        {/* //previous stored markers */}
+        {storedMarker.map((marker, index) => (
+          <Marker
+            key={index}
+            position={[marker.lat, marker.lng]}
+            icon={customIcon}
+          >
             <Popup>{marker.type}</Popup>
           </Marker>
-
         ))}
         <MapClickHandler />
       </MapContainer>

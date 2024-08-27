@@ -3,7 +3,7 @@ import {
   Button,
   Card,
   CardContent,
-  Divider,
+  // Divider,
   List,
   ListItem,
   Typography,
@@ -41,7 +41,7 @@ function EntryList({
                   <Typography className="font-bold text-center" variant="">
                     {entry.type}
                   </Typography>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle2">
                     Amount 💸: {entry.amount}
                   </Typography>
                   <Typography variant="subtitle2">
@@ -53,7 +53,7 @@ function EntryList({
           ))}
         </List>
 
-        <Divider />
+        {/* <Divider /> */}
 
         {/* Workout Section */}
         <List>
@@ -72,7 +72,7 @@ function EntryList({
                     {entry.type}
                   </Typography>
 
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle2">
                     Type 🚴🏻‍♂️: {entry.workoutName}
                   </Typography>
                   <Typography variant="subtitle2">
@@ -87,7 +87,7 @@ function EntryList({
           ))}
         </List>
 
-        <Divider />
+        {/* <Divider /> */}
 
         {/* Hangout Section */}
         <List>
@@ -106,7 +106,7 @@ function EntryList({
                     {entry.type}
                   </Typography>
 
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle2">
                     Duration 🕒: {entry.spendingDuration}
                   </Typography>
                   <Typography variant="subtitle2">
@@ -118,7 +118,7 @@ function EntryList({
           ))}
         </List>
 
-        <Divider />
+        {/* <Divider /> */}
 
         {/* Visiting Section */}
         <List>
@@ -137,7 +137,7 @@ function EntryList({
                     {entry.type}
                   </Typography>
 
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle2">
                     Place 📍: {entry.placeName}
                   </Typography>
                   <Typography variant="subtitle2">
@@ -152,7 +152,7 @@ function EntryList({
           ))}
         </List>
 
-        <Divider />
+        {/* <Divider /> */}
 
         {/* Load More Button */}
         <div className="text-center">
