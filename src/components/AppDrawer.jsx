@@ -106,6 +106,7 @@ export default function AppDrawer() {
 
   const [storedEntries, setStoredEntries] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(false);
+  const [markerVisible, setMarkerVisible] = useState(false);
 
   const handleCurrentLocation = () => {
     setCurrentLocation(true);
@@ -141,10 +142,12 @@ export default function AppDrawer() {
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    setFormVisible(false);
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+    setFormVisible(true);
   };
 
   const [action, setAction] = useState("");
@@ -230,14 +233,16 @@ export default function AppDrawer() {
 
     // Get existing entries from localStorage
     const existingEntries = JSON.parse(localStorage.getItem("entries")) || [];
-    console.log("Existing Entries Before Update:", existingEntries);
+    // console.log("Existing Entries Before Update:", existingEntries);
 
     // Add new entry
     existingEntries.push(newEntry);
-    console.log("New Entry:", newEntry);
+    // console.log("New Entry:", newEntry);
 
     // Store updated array in localStorage
     localStorage.setItem("entries", JSON.stringify(existingEntries));
+
+    setMarkerVisible(true); // add the marker on the map
 
     e.target.reset();
     setAction("");
@@ -246,7 +251,6 @@ export default function AppDrawer() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
     // Handle form submission logic
     setFormVisible(false); // Hide form after submission
   };
@@ -256,6 +260,13 @@ export default function AppDrawer() {
     setVisibleItems((prev) => prev + 5); // Load 5 more items each time
   };
 
+  const handleCancel=()=>{
+    setFormVisible(false);
+  }
+
+  
+ 
+  
   return (
     <Box sx={{ display: "flex" }} className="overflow-hidden">
       <CssBaseline />
@@ -276,14 +287,10 @@ export default function AppDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <WhereToVoteIcon
-              fontSize="large"
-      
-              sx={{ cursor: "pointer" }}
-            />
+          <WhereToVoteIcon fontSize="large" sx={{ cursor: "pointer" }} />
 
           <Typography variant="h6" noWrap component="div">
-             Mr.Mappy
+            Mr.Mappy
           </Typography>
         </Toolbar>
       </AppBar>
@@ -319,6 +326,7 @@ export default function AppDrawer() {
               loadMoreItems={loadMoreItems} // Pass the function here
             />
           </div>
+
         ) : (
           <SideDrawerIcon />
         )}
@@ -353,10 +361,11 @@ export default function AppDrawer() {
             handleMapClick={handleMapClick}
             storedMarker={storedEntries}
             navigateCurrentLocation={setCurrentLocation}
+            markerVisible={markerVisible}
           />
 
           {/* Floating form */}
-          {formVisible && (
+          {formVisible &&  (
             <Box
               sx={{
                 position: "absolute",
@@ -376,6 +385,8 @@ export default function AppDrawer() {
                 handleSubmit={handleSubmit}
                 handleAction={handleAction}
                 handleFormSubmit={handleFormSubmit}
+                setMarkerVisible={setMarkerVisible}
+                 handleCancel={handleCancel}
               />
             </Box>
           )}
@@ -384,7 +395,9 @@ export default function AppDrawer() {
       <div onClick={handleCurrentLocation}>
         <CurrentPosition />
       </div>
-      <FloatingActionButtonExtendedSize logoutUser={logoutUser} />
+      {!formVisible && (
+        <FloatingActionButtonExtendedSize logoutUser={logoutUser} />
+      )}
     </Box>
   );
 }
