@@ -36,7 +36,6 @@ const Mappy = () => {
     if (mapRef.current ) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           const { latitude, longitude } = position.coords;
           const coords = [latitude, longitude];
           setCurrentPosition(coords);

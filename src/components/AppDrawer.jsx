@@ -26,6 +26,7 @@ import MapComponent from "./MapComponent";
 import ActionForm from "./ActionForm";
 import EntryList from "./EntryList";
 import SideDrawerIcon from "./sideDrawerIcon";
+import AlertDialogModal from "./LogoutConfirmationModal";
 
 const drawerWidth = 240;
 
@@ -105,18 +106,20 @@ export default function AppDrawer() {
   const [formVisible, setFormVisible] = useState(false);
 
   const [storedEntries, setStoredEntries] = useState([]);
-  const [currentLocation, setCurrentLocation] = useState(false); // need to check 
+  const [currentLocation, setCurrentLocation] = useState(false); // need to check
   const [markerVisible, setMarkerVisible] = useState(false);
   const navigate = useNavigate();
-  // const [focusCurrentPosition, setFocusCurrentPosition] = useState(null);
-  
-  const [navigateButton,setNavigateButton]=useState(false);
-  
-console.log(navigateButton);
-  
-  // console.log(navigateCurrent)
-   
-  // console.log(currentLocation);
+
+  const [navigateButton, setNavigateButton] = useState(false);
+  const [logoutModelOpen, setLogoutModelOpen] = useState(false);
+
+  const handleLogoutModelOpen = () => {
+    setLogoutModelOpen(true);
+  };
+
+  const handleLogoutModelClose = () => {
+    setLogoutModelOpen(false);
+  };
 
   //Read the data from the local storage
   useEffect(() => {
@@ -140,7 +143,6 @@ console.log(navigateButton);
     setHangout(hangoutEntries);
     setVisiting(visitingEntries);
   }, []);
-
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -183,7 +185,6 @@ console.log(navigateButton);
 
     // Include coordinates in the form data
     if (clickedCoords) {
-      console.log(clickedCoords.lat);
 
       formData.append("latitude", `${clickedCoords.lat}`);
       formData.append("longitude", `${clickedCoords.lng}`);
@@ -210,7 +211,7 @@ console.log(navigateButton);
       case "Hangout":
         newEntry = {
           type: "Hangout",
-          place:formData.get("placeName"),
+          place: formData.get("placeName"),
           spendingDuration: formData.get("spendingDuration"),
           memorableMoments: formData.get("memorableMoments"),
         };
@@ -238,7 +239,7 @@ console.log(navigateButton);
 
     // Add new entry
     existingEntries.push(newEntry);
-    console.log("New Entry:", newEntry);
+    // console.log("New Entry:", newEntry);
 
     // Store updated array in localStorage
     localStorage.setItem("entries", JSON.stringify(existingEntries));
@@ -265,7 +266,6 @@ console.log(navigateButton);
     setFormVisible(false);
   };
 
-  
   return (
     <Box sx={{ display: "flex" }} className="overflow-hidden">
       <CssBaseline />
@@ -363,7 +363,6 @@ console.log(navigateButton);
             // onCurrentPositionFocus={setFocusCurrentPosition} // Pass the setter for focusing
             navigateButton={navigateButton}
             setNavigateButton={setNavigateButton}
-
           />
 
           {/* Floating form */}
@@ -394,13 +393,28 @@ console.log(navigateButton);
           )}
         </Box>
       </Box>
-      <div onClick={()=>{setNavigateButton(true)}}>
+
+      <AlertDialogModal
+        logoutModelOpen={logoutModelOpen}
+        logoutUser={logoutUser}
+        handleLogoutModelClose={handleLogoutModelClose}
+      />
+
+      <div
+        onClick={() => {
+          setNavigateButton(true);
+        }}
+      >
         <CurrentPosition />
       </div>
-      
+
+
       {!formVisible && (
-        <FloatingActionButtonExtendedSize logoutUser={logoutUser} />
+        <FloatingActionButtonExtendedSize
+          handleLogoutModelOpen={handleLogoutModelOpen}
+        />
       )}
+
     </Box>
   );
 }

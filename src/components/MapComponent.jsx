@@ -39,7 +39,6 @@ const MapComponent = ({
   // Reference to map instance
   const mapRef = useRef();
 
-  console.log(`${navigateButton} 23`);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -109,7 +108,6 @@ const MapClickHandler = () => {
 };
 
 
-  console.log(currentPosition);
 
   if (!currentPosition) {
     return <div>Loading map...</div>;
